@@ -1,0 +1,17 @@
+language: elixir
+elixir:
+- 1.3
+otp_release:
+- 18.2
+sudo: false
+addons:
+  postgresql: '9.4'
+before_script:
+- psql -c 'create database droplet_test;' -U postgres
+deploy:
+  provider: heroku
+  api_key:
+    secure: kwDRNysOmKua1+MtUB6hsR3cYQrNEG9/VbbUxT1dATA/ddz7DCY6YkRVpUrK7WS4Klkkk4lrssgKFkaviFnyrHCFnkFufNi4mxWu0s7xBRf39q8u5dNTZ/Bnkq87VX5ZZJSIVyV3b31mD2/4Zx5cWnP4HsJ9Rmx8NCF0nGBTOqxgV2rnEdGkF7c41HrneWoEKBTykzqRrRvxJVxHTEq3WZecCoipqF89J+LjPp8jNigK/yoXK9HCkuMLCKqdoqMwRwsTGFV3Oe72EoPYtUu4TL95xmts9itd6qYkctbas6e3qvuf43AAPw08bJlj6eCNpqvWpN9nQmAg/RpVUOivk/sNgaX3jozT6Tg9KJPclC8y5uj9/5rwi2ssnv1sUzQQj+GvPVd8XX65eaRT8zUmZcN7tEBpIWiuSRilXH8IaWH1WDF4NK7LoD28lLQcq0+0ZR9Bcp3e0b/nye2sJ2LJdzehgAuJ0FsiiEXtuAHo5tlr8v77X4Oy1B0WMS4uOWglSKiIWTx11SNtPiVEUXms/LNZYVq1cLSM1GEd4dipgBI2Xa79drOlFi+QAuUezvUza0u151q860MMuaQNbC5Jhy1CLGjx/PLcm9SpcTkUwyU3uKZBuh3ADwD78lrGsVxD813UMoQ0D6GhkK/zfhjS8Qzb+SSW7T5gdBk1z2MiT6c=
+  app: use-droplet-backend
+  on:
+    repo: BrianSipple/droplet-server
