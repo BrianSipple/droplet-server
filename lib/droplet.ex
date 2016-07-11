@@ -9,7 +9,8 @@ defmodule Droplet do
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
-      supervisor(Droplet.Repo, []),
+      # supervisor(Droplet.Repo, []),  # TODO: Uncomment this line to start the repo by default
+
       # Start the endpoint when the application starts
       supervisor(Droplet.Endpoint, []),
       # Start your own worker by calling: Droplet.Worker.start_link(arg1, arg2, arg3)
