@@ -47,8 +47,8 @@ defmodule Droplet.Web do
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
-      # TODO: Remove when not rendering templates in our app
-      use Phoenix.HTML
+      # TODO: Comment out not rendering templates in our app
+      # use Phoenix.HTML
 
       import Droplet.Router.Helpers
       import Droplet.ErrorHelpers

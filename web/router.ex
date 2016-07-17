@@ -14,7 +14,8 @@ defmodule Droplet.Router do
   end
 
   scope "/", Droplet do
-    pipe_through :browser # Use the default browser stack
+    # pipe_through :browser # Use the default browser stack
+    pipe_through :api # Use the default browser stack
 
     get "/users", UserController, :index
     get "/users/:id", UserController, :show

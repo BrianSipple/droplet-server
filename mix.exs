@@ -18,7 +18,7 @@ defmodule Droplet.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Droplet, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
+     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex]]
   end
 
@@ -34,8 +34,7 @@ defmodule Droplet.Mixfile do
      {:phoenix_pubsub, "~> 1.0"},
      {:phoenix_ecto, "~> 3.0"},
      {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.6"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
+     {:ja_serializer, "~> 0.9.0"},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"}]
   end

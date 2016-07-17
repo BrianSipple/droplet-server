@@ -1,5 +1,7 @@
 defmodule Droplet.UserView do
   use Droplet.Web, :view
+  use JaSerializer.PhoenixView
+
   alias Droplet.User
 
   def has_twitter(%User{twitter_username: twitter_username}) do
