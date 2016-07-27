@@ -13,7 +13,7 @@ config :droplet,
 config :droplet, Droplet.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "4Gn2FwHFQhU6z2hflpDxHcrRglPe7xxEgXJ2ldxcBurqCqaR7cCWCcwR3muZ0Alm",
-  render_errors: [view: Droplet.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: Droplet.ErrorView, accepts: ~w(json)],
   pubsub: [name: Droplet.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
