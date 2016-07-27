@@ -3,7 +3,6 @@ defmodule Droplet.UserController do
 
   alias Droplet.User
 
-
   def index(conn, _params) do
     users = Repo.all(User)
     render conn, "index.json", data: users

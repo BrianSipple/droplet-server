@@ -45,7 +45,7 @@ defmodule Droplet.Mixfile do
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:ja_serializer, "~> 0.9.0"},
+      {:ja_serializer, "~> 0.10.1"},
       {:comeonin, "~> 2.5"},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"}

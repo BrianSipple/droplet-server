@@ -17,3 +17,7 @@ config :droplet, Droplet.Repo,
   database: "droplet_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# During tests (and tests only), we may want to reduce the number
+# of bcrypt rounds so it does not slow down our test suite
+config :comeonin, :bcrypt_log_rounds, 4
