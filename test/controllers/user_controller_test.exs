@@ -1,14 +1,21 @@
 defmodule Droplet.UserControllerTest do
   use Droplet.ConnCase
-  alias Droplet.User
 
-  # Protip: make these consistent with the @valid_attrs in user_model_test.ex
-  @valid_attrs %{
-    first_name: "Brian",
-    last_name: "Sipple",
-    username: "bsipple",
-    password: "linkedIn123",
-    password_confirmation: "linkedIn123"
-  }
+  # Protip: If the attributes we're expecting are coming directly from a model,
+  # make our definitions here consistent the same
+  # @valid_attrs in the model test
+  @valid_attrs %{}
   @invalid_attrs %{}
+
+  setup %{conn: conn} do
+    conn =
+      conn
+      |> put_req_header("accept", "application/vnd.api+json")
+      |> put_req_header("content-type", "application/vnd.api+json")
+
+    {:ok, conn: conn}
+  end
+
+  # 📝 TODO: Test actions
+
 end
