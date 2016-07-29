@@ -13,8 +13,7 @@ defmodule Droplet.Repo.Migrations.CreateUser do
       add :location, :string
       add :accessibility, :string
       add :language, :string
-      add :role, :string
-      add :last_login, :string
+      add :last_login, :datetime
 
       timestamps()
     end

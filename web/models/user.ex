@@ -19,10 +19,11 @@ defmodule Droplet.User do
     field :location, :string
     field :accessibility, :string
     field :language, :string
-    field :role, :string
-    field :last_login, :string
+    field :last_login, Ecto.DateTime
 
     has_one :user_private_info, Droplet.UserPrivateInfo
+    has_many :notebooks, Droplet.Notebook
+    
     timestamps()
   end
 

@@ -25,12 +25,20 @@ defmodule Droplet.Router do
 
     # get "/user/current", UserController, :index
     # get "/users/:id", UserController, :show
-    
   end
 
   # Authenticated Routes
   scope "/api/v1", Droplet do
+    # pipe_through :api_auth
+    pipe_through :api
+
     get "/user/current", UserController, :current, as: :current_user
+
+    resources "/notebooks", NotebookController, except: [:new, :edit] do
+      resources "/notes", NoteController, except: [:new, :edit]
+    end
+
+    resources "/theme_colors", ThemeColorController, except: [:new, :edit]
   end
 
 
