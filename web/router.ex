@@ -39,6 +39,7 @@ defmodule Droplet.Router do
     end
 
     resources "/theme_colors", ThemeColorController, except: [:new, :edit]
+
   end
 
 

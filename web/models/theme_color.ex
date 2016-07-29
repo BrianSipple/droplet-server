@@ -7,11 +7,11 @@ defmodule Droplet.ThemeColor do
     field :lightness, :integer
     field :alpha, :decimal, default: 1
 
-    # Given the multitude of possible number combinations,
-    # I'm thinking it's better to just stamp out each color
-    # as a unique item with a foreign key of a note (TODO: Consider reconsidering 😀)
-    belongs_to :note, Droplet.Note
-    
+    # # Given the multitude of possible number combinations,
+    # # I'm thinking it's better to just stamp out each color
+    # # as a unique item with a foreign key of a note (TODO: Consider reconsidering 😀)
+    # belongs_to :note, Droplet.Note
+    #
     timestamps()
   end
 

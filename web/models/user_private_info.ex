@@ -17,8 +17,8 @@ defmodule Droplet.UserPrivateInfo do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:email, :subscription_type])
-    |> validate_required([:email, :subscription_type])
+    |> cast(params, [:email, :subscription_type, :user_id, :role_id])
+    |> validate_required([:email, :subscription_type, :user_id, :role_id])
     |> validate_inclusion(:subscription_type, ["basic", "individualStandard", "individualPremium", "teamStandard", "teamPremium"])
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)

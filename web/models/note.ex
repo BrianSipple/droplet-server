@@ -11,7 +11,7 @@ defmodule Droplet.Note do
     # is that the foreign key is always defined in
     # the schema that invokes `belongs_to/3`
     belongs_to :notebook, Droplet.Notebook
-    has_one :theme_color, Droplet.ThemeColor
+    belongs_to :theme_color, Droplet.ThemeColor
 
     timestamps()
   end
@@ -21,8 +21,8 @@ defmodule Droplet.Note do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :revision_count, :priority])
-    |> validate_required([:title, :revision_count, :priority])
+    |> cast(params, [:title, :revision_count, :priority, :notebook_id, :theme_color_id])
+    |> validate_required([:title, :revision_count, :priority, :notebook_id])
     |> validate_length(:title, max: 255)
     |> validate_inclusion(:priority, 0..10)
   end

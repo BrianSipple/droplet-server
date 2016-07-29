@@ -1,7 +1,10 @@
 defmodule Droplet.NoteController do
-  use Droplet.Web, :controller
+  require Logger
 
+  use Droplet.Web, :controller
   alias Droplet.Note
+
+  plug :assign_notebook
 
   def index(conn, _params) do
     notes = Repo.all(Note)
@@ -15,7 +18,8 @@ defmodule Droplet.NoteController do
       {:ok, note} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", notebook_note_path(conn, :show, note))
+        # |> put_resp_header("location", notebook_note_path(conn, :show, note))
+        |> put_resp_header("location", notebook_note_path(conn, :show, conn.assigns[:notebook], note))
         |> render("show.json", note: note)
       {:error, changeset} ->
         conn
@@ -51,5 +55,19 @@ defmodule Droplet.NoteController do
     Repo.delete!(note)
 
     send_resp(conn, :no_content, "")
+  end
+
+  defp assign_notebook(conn, _opts) do
+    case conn.params do
+      %{"notebook_id" => notebook_id} ->
+        case Repo.get(Droplet.Notebook, notebook_id) do
+          # nil -> invalid_notebook(conn) 📝 TODO: Implement?
+          nil -> Logger.error("Invalid notebook")
+          notebook -> assign(conn, :notebook, notebook)
+        end
+      _ ->
+        # invalid_notebook(conn)
+        Logger.error("Invalid notebook")
+    end
   end
 end

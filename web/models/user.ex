@@ -23,7 +23,7 @@ defmodule Droplet.User do
 
     has_one :user_private_info, Droplet.UserPrivateInfo
     has_many :notebooks, Droplet.Notebook
-    
+
     timestamps()
   end
 
@@ -46,7 +46,6 @@ defmodule Droplet.User do
         :location,
         :accessibility,
         :language,
-        :role,
         :last_login
       ])
     |> validate_required([:username, :password, :password_confirmation])

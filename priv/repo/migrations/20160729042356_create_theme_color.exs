@@ -8,7 +8,6 @@ defmodule Droplet.Repo.Migrations.CreateThemeColor do
       add :lightness, :integer, null: false
       add :alpha, :decimal, null: false
 
-      add :note_id, references(:notes, on_delete: :nothing)
       timestamps()
     end
 
