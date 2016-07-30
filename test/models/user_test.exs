@@ -2,6 +2,8 @@ defmodule Droplet.UserTest do
   use Droplet.ModelCase
 
   alias Droplet.User
+  alias Droplet.TestHelper
+
 
   @valid_attrs %{
     first_name: "Brian",

@@ -20,9 +20,10 @@ defmodule Droplet.Notebook do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:title, :sort_param_code, :owner_id, :theme_color_id])
+    |> foreign_key_constraint(:owner_id)
+    |> foreign_key_constraint(:theme_color_id)
     |> validate_required([:title, :sort_param_code, :owner_id])
     |> validate_length(:title, max: 255)
     |> validate_inclusion(:sort_param_code, ["createdAtDesc", "lastUpdatedAtDesc", "titleAsc", "titleDesc", "collaboratorCountDesc"])
-
   end
 end

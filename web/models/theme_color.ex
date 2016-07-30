@@ -2,10 +2,10 @@ defmodule Droplet.ThemeColor do
   use Droplet.Web, :model
 
   schema "theme_colors" do
-    field :hue, :integer
-    field :saturation, :integer
-    field :lightness, :integer
-    field :alpha, :decimal, default: 1
+    field :hue, :integer, default: 0
+    field :saturation, :integer, default: 0
+    field :lightness, :integer, default: 100
+    field :alpha, :decimal, default: Decimal.new(1)
 
     # # Given the multitude of possible number combinations,
     # # I'm thinking it's better to just stamp out each color
@@ -28,7 +28,7 @@ defmodule Droplet.ThemeColor do
     |> validate_number(:saturation, less_than_or_equal_to: 100)
     |> validate_number(:lightness, greater_than_or_equal_to: 0)
     |> validate_number(:lightness, less_than_or_equal_to: 100)
-    |> validate_number(:alpha, greater_than_or_equal_to: 0)
-    |> validate_number(:alpha, less_than_or_equal_to: 1)
+    |> validate_number(:alpha, greater_than_or_equal_to: Decimal.new(0))
+    |> validate_number(:alpha, less_than_or_equal_to: Decimal.new(1))
   end
 end

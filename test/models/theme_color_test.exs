@@ -3,7 +3,7 @@ defmodule Droplet.ThemeColorTest do
 
   alias Droplet.ThemeColor
 
-  @valid_attrs %{alpha: "120.5", hue: 42, lightness: 42, saturation: 42}
+  @valid_attrs %{alpha: 0.9, hue: 42, lightness: 42, saturation: 42}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

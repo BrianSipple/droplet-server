@@ -2,11 +2,15 @@ defmodule Droplet.ThemeColorControllerTest do
   use Droplet.ConnCase
 
   alias Droplet.ThemeColor
-  @valid_attrs %{alpha: "120.5", hue: 42, lightness: 42, saturation: 42}
-  @invalid_attrs %{}
+  @valid_attrs %{alpha: 0.9, hue: 42, lightness: 42, saturation: 42}
+  @invalid_attrs %{alpha: 1.1}
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    conn =
+      conn
+      |> put_req_header("content-type", "application/vnd.api+json")
+
+    {:ok, conn: conn}
   end
 
   test "lists all entries on index", %{conn: conn} do
@@ -15,13 +19,13 @@ defmodule Droplet.ThemeColorControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    theme_color = Repo.insert! %ThemeColor{}
+    theme_color = Repo.insert! ThemeColor.changeset(%ThemeColor{}, @valid_attrs)
     conn = get conn, theme_color_path(conn, :show, theme_color)
     assert json_response(conn, 200)["data"] == %{"id" => theme_color.id,
       "hue" => theme_color.hue,
       "saturation" => theme_color.saturation,
       "lightness" => theme_color.lightness,
-      "alpha" => theme_color.alpha}
+      "alpha" => Decimal.to_string(theme_color.alpha)}
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
@@ -42,10 +46,12 @@ defmodule Droplet.ThemeColorControllerTest do
   end
 
   test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    theme_color = Repo.insert! %ThemeColor{}
-    conn = put conn, theme_color_path(conn, :update, theme_color), theme_color: @valid_attrs
+    theme_color = Repo.insert! ThemeColor.changeset(%ThemeColor{}, @valid_attrs)
+
+    new_attrs = Dict.merge(@valid_attrs, %{hue: 3})
+    conn = put conn, theme_color_path(conn, :update, theme_color), theme_color: new_attrs
     assert json_response(conn, 200)["data"]["id"]
-    assert Repo.get_by(ThemeColor, @valid_attrs)
+    assert Repo.get_by(ThemeColor, new_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
