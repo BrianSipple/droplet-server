@@ -7,6 +7,7 @@ defmodule Droplet.Notebook do
 
     belongs_to :owner, Droplet.User
     belongs_to :theme_color, Droplet.ThemeColor
+    has_many :notes, Droplet.Note
 
     # TODO: Explore many-to-many relationship for
     # `collaborators` (users) http://stackoverflow.com/a/35684320/3133701
