@@ -30,6 +30,18 @@ config :logger, :console,
     "application/vnd.api+json" => ["json-api"]
   }
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
+# Guardian config
+config :guardian, Guardian,
+  allowed_algos: ["HS512"], # optional
+  verify_module: Guardian.JWT,  # optional
+  issuer: "Droplet",
+  ttl: { 30, :days },
+  verify_issuer: true,  # optional, verifies that the issuer is the same issuer as specified in the `issuer` field
+  secret_key: System.get_env("GUARDIAN_SECRET") || "NW7lWEt8MibefHjEuYSBIqoVUQ0FvCtDLjas8v31ISNsViSnfYgzuVZNUK3839IA",
+  serializer: Droplet.GuardianSerializer
+
+
+
+# Import environment specific config. THIS MUST REMAIN AT THE BOTTOM
+# OF THIS FILE so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

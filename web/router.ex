@@ -7,11 +7,8 @@ defmodule Droplet.Router do
 
   pipeline :api_auth do
     plug :accepts, ["json", "json-api"]
-
-    # TODO: Guardian
-    # plug Guardian.Plug.VerifyHeader, realm: "Bearer"
-    # plug Guardian.Plug.LoadResource
-
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource # Looks in the `sub` field of the token, fetches the resource from the Serializer and makes it available via `Guardian.Plug.current_resource(conn)`.
     plug JaSerializer.ContentTypeNegotiation # strict content-type/accept enforcement + auto-adding the proper content-type to responses
     plug JaSerializer.Deserializer # Normalize attributes to underscores
 
@@ -24,7 +21,7 @@ defmodule Droplet.Router do
     # post "/register", RegistrationController, :create
 
     # # Route to our SessionController's `create` method (and, within our code, refer to this route as "login")
-    # post "/token", SessionController, :create, as: :login
+    post "/token", SessionController, :create, as: :login
   end
 
   # Authenticated Routes
