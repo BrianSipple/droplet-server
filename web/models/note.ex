@@ -21,7 +21,7 @@ defmodule Droplet.Note do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :revision_count, :priority, :notebook_id, :theme_color_id])
+    |> cast(params, [:title, :revision_count, :priority, :content, :notebook_id, :theme_color_id])
     |> foreign_key_constraint(:notebook_id)
     |> foreign_key_constraint(:theme_color_id)
     |> validate_required([:title, :revision_count, :priority, :notebook_id])

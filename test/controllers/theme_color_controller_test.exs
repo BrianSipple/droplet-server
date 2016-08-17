@@ -2,6 +2,7 @@ defmodule Droplet.ThemeColorControllerTest do
   use Droplet.ConnCase
 
   alias Droplet.ThemeColor
+
   @valid_attrs %{alpha: 0.9, hue: 42, lightness: 42, saturation: 42}
   @invalid_attrs %{alpha: 1.1}
 
@@ -14,8 +15,9 @@ defmodule Droplet.ThemeColorControllerTest do
   end
 
   test "lists all entries on index", %{conn: conn} do
+    create_test_theme_colors()
     conn = get conn, theme_color_path(conn, :index)
-    assert json_response(conn, 200)["data"] == []
+    assert Enum.count(json_response(conn, 200)["data"]) == 4
   end
 
   test "shows chosen resource", %{conn: conn} do
@@ -65,5 +67,17 @@ defmodule Droplet.ThemeColorControllerTest do
     conn = delete conn, theme_color_path(conn, :delete, theme_color)
     assert response(conn, 204)
     refute Repo.get(ThemeColor, theme_color.id)
+  end
+
+  defp create_test_theme_colors do
+    Enum.each [
+      %{hue: 30, saturation: 55, lightness: 65, alpha: Decimal.new(1)},
+      %{hue: 340, saturation: 65, lightness: 75, alpha: Decimal.new(1)},
+      %{hue: 250, saturation: 75, lightness: 85, alpha: Decimal.new(1)},
+      %{hue: 160, saturation: 85, lightness: 95, alpha: Decimal.new(1)}
+    ],
+    fn color_attrs ->
+      Repo.insert! ThemeColor.changeset(%ThemeColor{}, color_attrs)
+    end
   end
 end

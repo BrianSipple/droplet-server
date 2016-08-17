@@ -18,6 +18,4 @@ defmodule Droplet.UserView do
         "Nice"
     end
   end
-
-
 end

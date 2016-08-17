@@ -9,8 +9,9 @@ defmodule Droplet.NoteControllerTest do
   @invalid_attrs %{}
 
   setup %{conn: conn} do
-    conn = conn
-    |> put_req_header("content-type", "application/vnd.api+json")
+    conn =
+      conn
+      |> put_req_header("content-type", "application/vnd.api+json")
 
     # Setup the note's containing notebook
     {:ok, user} = TestHelper.create_user(%{
@@ -33,7 +34,7 @@ defmodule Droplet.NoteControllerTest do
     assert Enum.count(json_response(conn, 200)["data"]) == 6
   end
 
-  test "shows chosen resource", %{conn: conn, data: %{user: user, notebook: notebook, theme_color: theme_color}} do
+  test "shows chosen resource", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
     note = Repo.insert! %Note{}
     conn = get conn, notebook_note_path(conn, :show, notebook, note)
     assert json_response(conn, 200)["data"] == %{"id" => note.id,
@@ -45,38 +46,38 @@ defmodule Droplet.NoteControllerTest do
       "theme_color_id" => note.theme_color_id}
   end
 
-  test "renders page not found when id is nonexistent", %{conn: conn, data: %{user: user, notebook: notebook, theme_color: theme_color}} do
+  test "renders page not found when id is nonexistent", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
     assert_error_sent 404, fn ->
       get conn, notebook_note_path(conn, :show, notebook, -1)
     end
   end
 
-  test "creates and renders resource when data is valid", %{conn: conn, data: %{user: user, notebook: notebook, theme_color: theme_color}} do
+  test "creates and renders resource when data is valid", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: theme_color}} do
     Logger.debug("Create note test")
     conn = post conn, notebook_note_path(conn, :create, notebook), note: valid_note_attrs(%{notebook: notebook, theme_color: theme_color})
     assert json_response(conn, 201)["data"]["id"]
     assert Repo.get_by(Note, @valid_attrs)
   end
 
-  test "does not create resource and renders errors when data is invalid", %{conn: conn, data: %{user: user, notebook: notebook, theme_color: theme_color}} do
+  test "does not create resource and renders errors when data is invalid", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
     conn = post conn, notebook_note_path(conn, :create, notebook), note: @invalid_attrs
     assert json_response(conn, 422)["errors"] != %{}
   end
 
-  test "updates and renders chosen resource when data is valid", %{conn: conn, data: %{user: user, notebook: notebook, theme_color: theme_color}} do
+  test "updates and renders chosen resource when data is valid", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: theme_color}} do
     {:ok, note } = TestHelper.create_note(notebook, theme_color, @valid_attrs)
     conn = put conn, notebook_note_path(conn, :update, notebook, note), note: %{title: "New title"}
     assert json_response(conn, 200)["data"]["id"]
     assert Repo.get_by(Note, %{title: "New title"})
   end
 
-  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn, data: %{user: user, notebook: notebook, theme_color: theme_color}} do
+  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
     note = Repo.insert! %Note{}
     conn = put conn, notebook_note_path(conn, :update, notebook, note), note: @invalid_attrs
     assert json_response(conn, 422)["errors"] != %{}
   end
 
-  test "deletes chosen resource", %{conn: conn, data: %{user: user, notebook: notebook, theme_color: theme_color}} do
+  test "deletes chosen resource", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
     note = Repo.insert! %Note{}
     conn = delete conn, notebook_note_path(conn, :delete, notebook, note)
     assert response(conn, 204)

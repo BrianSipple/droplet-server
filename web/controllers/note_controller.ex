@@ -13,7 +13,7 @@ defmodule Droplet.NoteController do
 
   def create(conn, %{"note" => note_params}) do
     changeset = Note.changeset(%Note{}, note_params)
-    Logger.info("Creating note")
+
     case Repo.insert(changeset) do
       {:ok, note} ->
         conn

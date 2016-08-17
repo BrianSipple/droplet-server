@@ -1,45 +1,50 @@
 defmodule Droplet.Router do
   use Droplet.Web, :router
 
-  # pipeline :browser do
-  #   plug :accepts, ["html"]
-  #   plug :fetch_session
-  #   plug :fetch_flash
-  #   plug :protect_from_forgery
-  #   plug :put_secure_browser_headers
-  # end
-
   pipeline :api do
     plug :accepts, ["json", "json-api"]
+  end
+
+  pipeline :api_auth do
+    plug :accepts, ["json", "json-api"]
+
+    # TODO: Guardian
+    # plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    # plug Guardian.Plug.LoadResource
+
     plug JaSerializer.ContentTypeNegotiation # strict content-type/accept enforcement + auto-adding the proper content-type to responses
     plug JaSerializer.Deserializer # Normalize attributes to underscores
+
   end
 
   # Unauthenticated routes
   scope "/api/v1", Droplet do
     pipe_through :api # Use the api stack
 
-    # post "/registration", RegistrationController, :create
+    # post "/register", RegistrationController, :create
+
     # # Route to our SessionController's `create` method (and, within our code, refer to this route as "login")
     # post "/token", SessionController, :create, as: :login
-
-    # get "/user/current", UserController, :index
-    # get "/users/:id", UserController, :show
   end
 
   # Authenticated Routes
   scope "/api/v1", Droplet do
-    # pipe_through :api_auth
-    pipe_through :api
+    pipe_through :api_auth
 
     get "/user/current", UserController, :current, as: :current_user
+
+    resources "/users", UserController, except: [:new, :edit]
+
+    # TODO: Possible idea
+    # resources "/user", UserController, only: [:show, :index] do
+    #   get "notebooks", NotebookController, :index, as :notebooks
+    # end
 
     resources "/notebooks", NotebookController, except: [:new, :edit] do
       resources "/notes", NoteController, except: [:new, :edit]
     end
 
     resources "/theme_colors", ThemeColorController, except: [:new, :edit]
-
   end
 
 

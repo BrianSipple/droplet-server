@@ -71,12 +71,6 @@ defmodule Droplet.TestHelper do
     |> Notebook.changeset(merge_defaults(@default_notebook_attrs, opts))
     |> Repo.insert()
   end
-  # def create_notebook(user, theme_color, %{title: title, sort_param_code: sort_param_code \\ "lastUpdatedAtDesc"}) do
-  #   user
-  #   |> build_assoc(:notebooks, owner_id: user.id, theme_color_id: theme_color.id)
-  #   |> Notebook.changeset(%{title: title, sort_param_code: sort_param_code})
-  #   |> Repo.insert()
-  # end
 
   def create_note(notebook, theme_color, opts \\ %{}) do
     notebook
@@ -84,12 +78,6 @@ defmodule Droplet.TestHelper do
     |> Note.changeset(merge_defaults(@default_note_attrs, opts))
     |> Repo.insert()
   end
-  # def create_note(notebook, theme_color, %{title: title, content: content, revision_count: revision_count, priority: priority}) do
-  #   notebook
-  #   |> build_assoc(:notes, notebook_id: notebook.id, theme_color_id: theme_color.id)
-  #   |> Note.changeset(%{title: title, content: content, revision_count: revision_count, priority: priority})
-  #   |> Repo.insert()
-  # end
 
   # Merge options into a "source" of defaults, using the default for each
   # key if the inBound object contains `_nil` for it
