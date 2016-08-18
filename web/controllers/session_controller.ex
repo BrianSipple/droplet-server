@@ -25,10 +25,11 @@ defmodule Droplet.SessionController do
 
         conn
         |> assign(:current_user, user)
+        |> fetch_session
         |> put_session(:current_user_id, user.id)
         |> render("token.json", %{token: jwt})  # Return our token to the client
 
-      # {:error} -> login_failed(conn) # TODO: Implement login_failed helper
+      # {:error} -> login_failed(conn)
       {:error} ->
         Logger.warn "User " <> username <> " just failed to login"
         conn

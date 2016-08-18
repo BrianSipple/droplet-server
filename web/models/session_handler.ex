@@ -9,13 +9,13 @@ defmodule Droplet.SessionHandler do
   alias Comeonin.Bcrypt
 
 
-  def login(%{"identification" => identification, "password" => password}, repo) do
+  def login(%{identification: identification, password: password}, repo) do
     user = get_user_from_identification(identification, repo)
     Logger.info "#login, Attempting to authenticate user with name of " <> user.username <> ", password of " <> password
 
     case authenticate(user, password) do
       true -> { :ok, user }
-      _ -> :error
+      _ -> {:error}
     end
   end
 
@@ -31,7 +31,7 @@ defmodule Droplet.SessionHandler do
       nil ->
         Bcrypt.dummy_checkpw()  # simulate a check anyway to prevent timing attacks
         false
-      _ -> Bcrypt.checkpw(password, user[:password_hash])
+      _ -> Bcrypt.checkpw(password, user.password_hash)
     end
   end
 
@@ -39,9 +39,9 @@ defmodule Droplet.SessionHandler do
     if String.contains?(identification, "@") do
       user_private_info = repo.get_by(UserPrivateInfo, email: identification)
 
-      Repo.get(User, user_private_info.user_id)
+      repo.get(User, user_private_info.user_id)
     else
-      Repo.get(User, username: identification)  # Otherwise, treat the identification as the username
+      repo.get_by(User, username: identification)  # Otherwise, treat the identification as the username
     end
   end
 end

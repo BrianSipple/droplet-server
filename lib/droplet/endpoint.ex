@@ -36,5 +36,10 @@ defmodule Droplet.Endpoint do
     key: "_droplet_key",
     signing_salt: "NJ73EsAT"
 
+
+  # 🔈 NOTE: Place CORS plug before the router so that it can handle preflight
+  # requests before anything else interferes
+  plug Droplet.CORS
+  
   plug Droplet.Router
 end
