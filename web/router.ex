@@ -7,10 +7,10 @@ defmodule Droplet.Router do
 
   pipeline :api_auth do
     plug :accepts, ["json", "json-api"]
-    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
-    plug Guardian.Plug.LoadResource # Looks in the `sub` field of the token, fetches the resource from the Serializer and makes it available via `Guardian.Plug.current_resource(conn)`.
     plug JaSerializer.ContentTypeNegotiation # strict content-type/accept enforcement + auto-adding the proper content-type to responses
     plug JaSerializer.Deserializer # Normalize attributes to underscores
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource # Looks in the `sub` field of the token, fetches the resource from the Serializer and makes it available via `Guardian.Plug.current_resource(conn)`.
   end
 
   # Unauthenticated routes

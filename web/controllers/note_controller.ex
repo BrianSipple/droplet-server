@@ -5,6 +5,7 @@ defmodule Droplet.NoteController do
   alias Droplet.Note
 
   plug :assign_notebook
+  plug Guardian.Plug.EnsureAuthenticated, handler: Droplet.AuthErrorHandler
 
   def index(conn, _params) do
     notes = Repo.all(Note)

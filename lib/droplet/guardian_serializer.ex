@@ -7,7 +7,7 @@ defmodule Droplet.GuardianSerializer do
   alias Droplet.User
 
   # Serialize a user FOR a token
-  def for_token(user = %User{}), do: { :ok, "User#{user.id}" }
+  def for_token(user = %User{}), do: { :ok, "User:#{user.id}" }
   def for_token(_), do: { :error, "Unknown resource type" }
 
   # Deserialize a user FROM a token

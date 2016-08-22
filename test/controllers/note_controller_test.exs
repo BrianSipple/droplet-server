@@ -9,10 +9,6 @@ defmodule Droplet.NoteControllerTest do
   @invalid_attrs %{}
 
   setup %{conn: conn} do
-    conn =
-      conn
-      |> put_req_header("content-type", "application/vnd.api+json")
-
     # Setup the note's containing notebook
     {:ok, user} = TestHelper.create_user(%{
       first_name: "Brian",
@@ -24,6 +20,15 @@ defmodule Droplet.NoteControllerTest do
     {:ok, theme_color} = TestHelper.create_theme_color(%{hue: 44, saturation: 85, lightness: 89, alpha: 0.5})
     {:ok, notebook} = TestHelper.create_notebook(user, theme_color, %{title: "Fruits", sort_param_code: "lastUpdatedAtDesc"})
 
+    { :ok, jwt, _ } = Guardian.encode_and_sign(user, :token)
+
+    conn =
+      conn
+      |> put_req_header("accept", "application/vnd.api+json")
+      |> put_req_header("content-type", "application/vnd.api+json")
+      |> put_req_header("authorization", "Bearer #{jwt}")
+
+
     {:ok, conn: conn, data: %{notebook: notebook, user: user, theme_color: theme_color}}
   end
 
@@ -34,16 +39,24 @@ defmodule Droplet.NoteControllerTest do
     assert Enum.count(json_response(conn, 200)["data"]) == 6
   end
 
-  test "shows chosen resource", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
-    note = Repo.insert! %Note{}
+  test "shows chosen resource", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: theme_color}} do
+    # note = Repo.insert! %Note{}
+    attrs = Map.put(@valid_attrs, :title, "Surviving Russian Winters")
+    {:ok, note} = TestHelper.create_note(notebook, theme_color, attrs)
+
     conn = get conn, notebook_note_path(conn, :show, notebook, note)
-    assert json_response(conn, 200)["data"] == %{"id" => note.id,
-      "title" => note.title,
-      "content" => note.content,
-      "revision_count" => note.revision_count,
-      "priority" => note.priority,
-      "notebook_id" => note.notebook_id,
-      "theme_color_id" => note.theme_color_id}
+    assert json_response(conn, 200)["data"] == %{
+      "id" => to_string(note.id),
+      "type" => "note",
+      "attributes" => %{
+        "title" => note.title,
+        "content" => note.content,
+        "revision-count" => note.revision_count,
+        "priority" => note.priority
+        # "notebook_id" => note.notebook_id,
+        # "theme_color_id" => note.theme_color_id
+      }
+    }
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do

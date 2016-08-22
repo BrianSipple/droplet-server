@@ -4,13 +4,13 @@ defmodule Droplet.UserController do
 
   alias Droplet.User
 
-  # plug Guardian.Plug.EnsureAuthenticated, handler: Droplet.AuthErrorHandler
+  plug Guardian.Plug.EnsureAuthenticated, handler: Droplet.AuthErrorHandler
 
   # plug :scrub_params, "data" when action in [:create, :update] # TODO: Delete if determined that this isn't our use case
 
   def index(conn, _params) do
     users = Repo.all(User)
-    render conn, "index.json", data: users
+    render conn, :index, data: users
   end
 
   def create(conn, %{"data" => %{"attributes" => user_params}}) do

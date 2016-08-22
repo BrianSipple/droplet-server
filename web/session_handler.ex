@@ -9,11 +9,12 @@ defmodule Droplet.SessionHandler do
   alias Comeonin.Bcrypt
 
 
-  def login(%{identification: identification, password: password}, repo) do
-    user = get_user_from_identification(identification, repo)
-    Logger.info "#login, Attempting to authenticate user with name of " <> user.username <> ", password of " <> password
+  def login(params, repo) do
+    user = get_user_from_identification(params["identification"], repo)
 
-    case authenticate(user, password) do
+    Logger.info "#login, Attempting to authenticate user with name of " <> user.username <> ", password of " <> params["password"] <> ", password hash of " <> user.password_hash
+
+    case authenticate(user, params["password"]) do
       true -> { :ok, user }
       _ -> {:error}
     end

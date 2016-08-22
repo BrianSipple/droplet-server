@@ -15,7 +15,7 @@ defmodule Droplet.SessionController do
     case SessionHandler.login(session_params, Repo) do
       {:ok, user} ->
         # Sucessfull login!
-        Logger.info "User with identification `" <> session_params.identification <> "` just logged in"
+        Logger.info "User with identification `" <> session_params["identification"] <> "` just logged in"
         # Encode a JWT
         { :ok, jwt, _ } = Guardian.encode_and_sign(user, :token)
 
@@ -27,7 +27,7 @@ defmodule Droplet.SessionController do
 
       # {:error} -> login_failed(conn)
       {:error} ->
-        Logger.warn "User " <> session_params.identification <> " just failed to login"
+        Logger.warn "User " <> session_params["identification"] <> " just failed to login"
         conn
         |> put_status(401)
         |> render(Droplet.ErrorView, "401.json")

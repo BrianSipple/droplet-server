@@ -8,11 +8,6 @@ defmodule Droplet.UserControllerTest do
   @invalid_attrs %{password: 2}
 
   setup %{conn: conn} do
-    conn =
-      conn
-      |> put_req_header("accept", "application/vnd.api+json")
-      |> put_req_header("content-type", "application/vnd.api+json")
-
     users =
       1..5
       |> Enum.map(fn(i) -> TestHelper.create_user(%{username: "testUser#{i}", first_name: "#{i}"}) end)
@@ -20,16 +15,28 @@ defmodule Droplet.UserControllerTest do
 
     current_user = Enum.at(users, 0)
 
-    session_params = %{
-      "grant_type": "password",
-      "session": %{
-        "identification": current_user.username,
-        "password": current_user.password_hash
-      }
-    }
+    # Get a token for our current_user to bypass validation
+    {:ok, jwt, _ } = Guardian.encode_and_sign(current_user, :token)
 
-    # conn = post build_conn(), "/token", session_params
-    post build_conn(), "/token", session_params
+    # TODO: There's probably a cleaner way of abstracting the above validation in the session
+    # handler and then being able to do something like this:
+    #
+    # post build_conn(), "/token", session_params
+    #
+    # session_params = %{
+    #   "grant_type": "password",
+    #   "session": %{
+    #     "identification": current_user.username,
+    #     "password": current_user.password_hash
+    #   }
+    # }
+
+    conn =
+      conn
+      |> put_req_header("accept", "application/vnd.api+json")
+      |> put_req_header("content-type", "application/vnd.api+json")
+      |> put_req_header("authorization", "Bearer #{jwt}")
+
 
     {:ok, conn: conn, users: users, current_user: current_user}
   end
