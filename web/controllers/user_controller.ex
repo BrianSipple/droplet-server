@@ -1,15 +1,19 @@
 defmodule Droplet.UserController do
-  require Logger
   use Droplet.Web, :controller
+  require Logger
 
   alias Droplet.User
 
+  # plug Guardian.Plug.EnsureAuthenticated, handler: Droplet.AuthErrorHandler
+
+  # plug :scrub_params, "data" when action in [:create, :update] # TODO: Delete if determined that this isn't our use case
+
   def index(conn, _params) do
     users = Repo.all(User)
-    render conn, "index.json", users: users
+    render conn, "index.json", data: users
   end
 
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, %{"data" => %{"attributes" => user_params}}) do
     changeset = User.changeset(%User{}, user_params)
 
     case Repo.insert(changeset) do
@@ -17,17 +21,17 @@ defmodule Droplet.UserController do
         conn
           |> put_status(:created)
           |> put_resp_header("location", user_path(conn, :show, user))
-          |> render("show.json", user: user)
+          |> render(:show, data: user)
       {:error, changeset} ->
         conn
           |> put_status(:unprocessable_entity)
-          |> render(Droplet.ChangesetView, "error.json", changeset: changeset)
+          |> render(:errors, data: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
-    render(conn, "show.json", user: user)
+    render(conn, :show, data: user)
   end
 
   # TODO: Implement
@@ -37,16 +41,16 @@ defmodule Droplet.UserController do
   #     |> Guardian.Plug.current_resource
   #
   #   conn
-  #   |> render(Droplet.UserView, "show.json", user: user)
+  #   |> render(Droplet.UserView, "show.json", data: user)
   # end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
+  def update(conn, %{"id" => id, "data" => %{"attributes" => user_params} }) do
     user = Repo.get!(User, id)
     changeset = User.changeset(user, user_params)
 
     case Repo.update(changeset) do
       {:ok, user} ->
-        render(conn, "show.json", user: user)
+        render(conn, :show, data: user)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

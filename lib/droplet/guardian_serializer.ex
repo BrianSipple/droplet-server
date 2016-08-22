@@ -1,12 +1,12 @@
 # A serializer for Guardian that tells it how to encode
 # and decode a resource into and out of the token.
 defmodule Droplet.GuardianSerializer do
-  @behaviour GuardianSerializer
+  @behaviour Guardian.Serializer
 
   alias Droplet.Repo
   alias Droplet.User
 
-  # Serialize a user FOR a token 
+  # Serialize a user FOR a token
   def for_token(user = %User{}), do: { :ok, "User#{user.id}" }
   def for_token(_), do: { :error, "Unknown resource type" }
 

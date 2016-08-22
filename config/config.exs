@@ -22,13 +22,13 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-  # The JSON-API standard requires that we handle the mime type application/vnd.api+json
-  config :phoenix, :format_encoders,
-    "json-api": Poison
+# The JSON-API standard requires that we handle the mime type application/vnd.api+json
+config :phoenix, :format_encoders,
+  "json-api": Poison
 
-  config :plug, :mimes, %{
-    "application/vnd.api+json" => ["json-api"]
-  }
+config :plug, :mimes, %{
+  "application/vnd.api+json" => ["json-api"]
+}
 
 # Guardian config
 config :guardian, Guardian,

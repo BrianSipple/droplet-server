@@ -3,7 +3,7 @@ curl -X POST \
   -H "Content-type: application/json" \
   -d '{
     "grant_type": "password",
-    "username": "bsipple",
+    "identification": "bsipple",
     "password": "testPassword123"
   }' \
   http://localhost:4000/api/v1/token

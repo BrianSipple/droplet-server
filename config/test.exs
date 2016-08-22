@@ -8,9 +8,9 @@ config :droplet, Droplet.Endpoint,
 
 # Print only warnings and errors during test
 config :logger,
-  level: :warn,
-  backends: [:console]
-  # compile_time_purge_level: :info
+  level: :info,
+  backends: [:console],
+  compile_time_purge_level: :info
 
 # Configure your database
 config :droplet, Droplet.Repo,

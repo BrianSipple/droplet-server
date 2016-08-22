@@ -2,20 +2,26 @@ defmodule Droplet.UserView do
   use Droplet.Web, :view
   use JaSerializer.PhoenixView
 
-  alias Droplet.User
 
-  def has_twitter(%User{twitter_username: twitter_username}) do
-    !!twitter_username
-  end
+  attributes [
+    :username,
+    :first_name,
+    :last_name,
+    :password,
+    :password_confirmation,
+    :password_hash,
+    :twitter_username,
+    :avatar_url,
+    :bio,
+    :location,
+    :accessibility,
+    :language,
+    :last_login
+  ]
 
-  def description(%User{username: username}) do
-    cond do
-      username == "Brian" ->
-        "Awesome"
-      username == "IronMan" ->
-        "SuperCool"
-      true ->
-        "Nice"
-    end
-  end
+  has_one :user_private_info
+    # include: true  # TODO: Proper configuration of side-loaded data
+    # field: :private_info # TODO: Consider this naming
+
+  has_many :notebooks
 end

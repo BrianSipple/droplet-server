@@ -1,4 +1,6 @@
 defmodule Droplet.TestHelper do
+  require Logger
+
   alias Droplet.Repo
   alias Droplet.Role
   alias Droplet.User
@@ -23,33 +25,33 @@ defmodule Droplet.TestHelper do
 
   def create_user(opts \\ %{}) do
     User.changeset(%User{}, merge_defaults(@default_user_attrs, opts))
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   def create_user_private_info(user, role, opts \\ %{}) do
     user
     |> build_assoc(:user_private_info, role_id: role.id)
     |> UserPrivateInfo.changeset(merge_defaults(@default_user_private_info_attrs, opts))
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   def create_theme_color(opts \\ %{}) do
     ThemeColor.changeset(%ThemeColor{}, merge_defaults(@default_theme_color_attrs, opts))
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   def create_notebook(user, theme_color, opts \\ %{}) do
     user
     |> build_assoc(:notebooks, owner_id: user.id, theme_color_id: theme_color.id)
     |> Notebook.changeset(merge_defaults(@default_notebook_attrs, opts))
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   def create_note(notebook, theme_color, opts \\ %{}) do
     notebook
     |> build_assoc(:notes, notebook_id: notebook.id, theme_color_id: theme_color.id)
     |> Note.changeset(merge_defaults(@default_note_attrs, opts))
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   # Merge options into a "source" of defaults, using the default for each
