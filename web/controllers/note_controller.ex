@@ -1,37 +1,41 @@
 defmodule Droplet.NoteController do
   require Logger
+  alias Droplet.{Note, Repo, NoteView}
 
   use Droplet.Web, :controller
-  alias Droplet.Note
 
   plug :assign_notebook
   plug Guardian.Plug.EnsureAuthenticated, handler: Droplet.AuthErrorHandler
 
   def index(conn, _params) do
     notes = Repo.all(Note)
-    render(conn, "index.json", notes: notes)
+    render(conn, :index, data: notes)
   end
 
-  def create(conn, %{"note" => note_params}) do
-    changeset = Note.changeset(%Note{}, note_params)
+  def create(conn, %{"data" => %{"type" => "notes", "attributes" => note_params, "relationships" => relationships}}) do
+    notebook_id = relationships["notebook"]["data"]["id"]
+    theme_color_id = relationships["theme_color"]["data"]["id"]
+    # notebook_id = relationships.notebook.data.id
+    # theme_color_id = relationships.theme_color.data.id
+
+    changeset = Note.changeset(%Note{notebook_id: notebook_id, theme_color_id: theme_color_id}, note_params)
 
     case Repo.insert(changeset) do
       {:ok, note} ->
         conn
         |> put_status(:created)
-        # |> put_resp_header("location", notebook_note_path(conn, :show, note))
         |> put_resp_header("location", notebook_note_path(conn, :show, conn.assigns[:notebook], note))
-        |> render("show.json", note: note)
+        |> render(:show, data: note)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Droplet.ChangesetView, "error.json", changeset: changeset)
+        |> render(:errors, data: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     note = Repo.get!(Note, id)
-    render(conn, "show.json", note: note)
+    render(conn, :show, data: note)
   end
 
   def update(conn, %{"id" => id, "note" => note_params}) do
@@ -40,7 +44,7 @@ defmodule Droplet.NoteController do
 
     case Repo.update(changeset) do
       {:ok, note} ->
-        render(conn, "show.json", note: note)
+        render(conn, :show, data: note)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

@@ -39,8 +39,9 @@ defmodule Droplet.NoteControllerTest do
     assert Enum.count(json_response(conn, 200)["data"]) == 6
   end
 
-  test "shows chosen resource", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: theme_color}} do
-    # note = Repo.insert! %Note{}
+  test "shows chosen resource",
+    %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: theme_color}} do
+
     attrs = Map.put(@valid_attrs, :title, "Surviving Russian Winters")
     {:ok, note} = TestHelper.create_note(notebook, theme_color, attrs)
 
@@ -59,15 +60,21 @@ defmodule Droplet.NoteControllerTest do
     }
   end
 
-  test "renders page not found when id is nonexistent", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
+  test "renders page not found when id is nonexistent",
+    %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: _theme_color}} do
+
     assert_error_sent 404, fn ->
       get conn, notebook_note_path(conn, :show, notebook, -1)
     end
   end
 
-  test "creates and renders resource when data is valid", %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: theme_color}} do
+  test "creates and renders resource when data is valid",
+    %{conn: conn, data: %{user: _user, notebook: notebook, theme_color: theme_color}} do
+
+    attrs = Poison.encode!(%{ data: resource_data(%{notebook_id: notebook.id, theme_color_id: theme_color.id}) })
+
     Logger.debug("Create note test")
-    conn = post conn, notebook_note_path(conn, :create, notebook), note: valid_note_attrs(%{notebook: notebook, theme_color: theme_color})
+    conn = post conn, notebook_note_path(conn, :create, notebook), attrs
     assert json_response(conn, 201)["data"]["id"]
     assert Repo.get_by(Note, @valid_attrs)
   end
@@ -115,5 +122,16 @@ defmodule Droplet.NoteControllerTest do
     @valid_attrs
     |> Map.put(:notebook_id, notebook.id)
     |> Map.put(:theme_color_id, theme_color.id)
+  end
+
+  defp resource_data(%{notebook_id: notebook_id, theme_color_id: theme_color_id}) do
+    %{
+      type: "notes",
+      attributes: @valid_attrs,
+      relationships: %{
+        notebook: %{ data: %{id: notebook_id } },
+        theme_color: %{ data: %{id: theme_color_id } }
+      }
+    }
   end
 end
